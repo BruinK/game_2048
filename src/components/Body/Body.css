@@ -1,0 +1,74 @@
+@charset "UT-8";
+* {
+    margin: 0;
+    padding: 0;
+}
+.gameBody{
+    height: 600px;
+    width: 600px;
+    margin: 0 auto;
+    background: #FFF;
+    border: 15px solid #bbada0;
+    border-radius: 10px;
+    position: relative;
+    font-size: 50px;
+    font-weight: bold;
+}
+.gameBody .gameCell{
+    float: left;
+    height: 130px;
+    line-height: 130px;
+    width: 130px;
+    border: 10px solid #bbada0;
+    border-radius: 20px;
+    box-shadow: 0 0 0 10px #bbada0;
+    outline: 10px solid #bbada0;
+    text-align: center;
+}
+.num0{
+    background: #e1d5ca;
+}
+.num2{
+    background: #eee4da;
+    color: #776e65;
+}
+.num4{
+    background: #ede0c8;
+    color: #776e65;
+}
+.num8{
+    background: #f2b179;
+    color: #F9F6F2;
+}
+.num16{
+    background: #f59563;
+    color: #F9F6F2;
+}
+.num32{
+    background: #f67c5f;
+    color: #F9F6F2;
+}
+.num64{
+    background: #f65e3b;
+    color: #F9F6F2;
+}
+.num128{
+    background: #edcf72;
+    color: #F9F6F2;
+}
+.num256{
+    background: #eecb63;
+    color: #F9F6F2;
+}
+.num512{
+    background: #ecc752;
+    color: #F9F6F2;
+}
+.num1024{
+     background: #eec43f;
+     color: #F9F6F2;
+}
+.num2048{
+    background: #ecc32d;
+    color: #F9F6F2;
+}
