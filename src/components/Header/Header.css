@@ -29,6 +29,7 @@
 }
 
 .header .headerTop .scores{
+    position: relative;
     width: 150px;
     height: 80px;
     border: 1px solid #eee;
@@ -46,10 +47,36 @@
     color: #eef;
 }
 .header .headerTop .scores>div:nth-child(2) {
-    font-size: 20px;
+    font-size: 26px;
     font-family: 'Miscrosoft Yahei';
     color: #fff;
 }
+
+@keyframes fadeIn {
+0% {
+opacity: 1; /*初始状态 透明度为0*/
+}
+
+100% {
+opacity: 0; /*结尾状态 透明度为0*/
+}
+}
+.header .headerTop .scores .scoresAnimation {
+    position: absolute;
+    font-size: 28px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color:#000;
+    opacity: 0;
+    top: 60px;
+    left: 20px;
+    animation: fadeIn 1.5s ;
+    -webkit-animation: fadeIn 1.5s;
+}
+.hidden{
+    display: none;
+}
+
+
 .header .headerBottom{
     height: 100px;
     width: 100%;

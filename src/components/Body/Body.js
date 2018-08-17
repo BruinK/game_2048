@@ -1,11 +1,75 @@
 import React from 'react';
-import { KeyDown } from 'react-event-components';
 import './Body.css';
 
 export default class Body extends React.Component {
+  state = {
+    startPointX: 0,
+    startPointY: 0
+  }
   componentWillMount() {
     const { actions } = this.props;
     actions.startGame();
+    window.addEventListener('keydown', this.onListenKeydown);
+  }
+  onListenKeydown=e => {
+    const { actions } = this.props;
+    switch (e.keyCode) {
+      case 38:
+      case 87:
+        actions.toUp();
+        actions.hiddeScores();
+        break;
+      case 40:
+      case 83:
+        actions.toDown();
+        actions.hiddeScores();
+        break;
+      case 37:
+      case 65:
+        actions.toLeft();
+        actions.hiddeScores();
+        break;
+      case 39:
+      case 68:
+        actions.toRight();
+        actions.hiddeScores();
+        break;
+      default:
+        break;
+    }
+  }
+  onlistenTouchStart=e => {
+    console.log('X1', e.touches[0].screenX);
+    console.log('Y1', e.touches[0].screenY);
+    this.setState({
+      startPointX: e.touches[0].screenX,
+      startPointY: e.touches[0].screenY
+    });
+  }
+  onListenTouchEnd=e => {
+    const { actions } = this.props;
+    console.log('X2', e.changedTouches[0].screenX);
+    console.log('Y2', e.changedTouches[0].screenY);
+    const X = e.changedTouches[0].screenX - this.state.startPointX;
+    const Y = e.changedTouches[0].screenY - this.state.startPointY;
+    if (Math.abs(X) > Math.abs(Y)) {
+      if (X > 0) {
+        actions.toRight();
+        actions.hiddeScores();
+      } else {
+        actions.toLeft();
+        actions.hiddeScores();
+      }
+    }
+    if (Math.abs(X) < Math.abs(Y)) {
+      if (Y > 0) {
+        actions.toDown();
+        actions.hiddeScores();
+      } else {
+        actions.toUp();
+        actions.hiddeScores();
+      }
+    }
   }
     getCell=() => {
       const { data } = this.props;
@@ -16,30 +80,10 @@ export default class Body extends React.Component {
         return <div className={`gameCell num${num}`} key={`${id}-${idx}`}>{num}</div>;
       }));
     }
-    listenUp=() => {
-      const { actions } = this.props;
-      actions.toUp();
-    }
-    listenDown=e => {
-      console.log(e);
-      const { actions } = this.props;
-      actions.toDown();
-    }
-    listenLeft=() => {
-      const { actions } = this.props;
-      actions.toLeft();
-    }
-    listenRight=() => {
-      const { actions } = this.props;
-      actions.toRight();
-    }
+
     render() {
       return (
-        <div className="gameBody" >
-          <KeyDown when="w" do={this.listenUp} />
-          <KeyDown when="s" do={this.listenDown} />
-          <KeyDown when="a" do={this.listenLeft} />
-          <KeyDown when="d" do={this.listenRight} />
+        <div className="gameBody" onTouchStart={this.onlistenTouchStart} onTouchEnd={this.onListenTouchEnd}>
           {
                 this.getCell()
             }

@@ -9,10 +9,10 @@ import * as actionCreators from './actions';
 /*eslint-disable*/
 class App extends Component {
   render() {
-    const {scores, bestScores} = this.props;
+    const {scores, bestScores, isHidden} = this.props;
     return (
       <div className="App">
-        <Header actions={this.props.actions} scores={scores} bestScores={bestScores}/>
+        <Header actions={this.props.actions} scores={scores} bestScores={bestScores} isHidden={isHidden}/>
         < Body data = {this.props.mainList} actions={this.props.actions}/>
       </div>
     );
@@ -24,11 +24,13 @@ function mapDispatchToProps(dispatch) {
   };
 }
 function mapStateToProps(state) {
-  const {mainList,scores,bestScores}=state;
+  const {mainList,scores,bestScores}=state.gameLogic;
+  const {isHidden}=state.gameUI;
   return {
     mainList,
     scores,
-    bestScores
+    bestScores,
+    isHidden
   };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(App);

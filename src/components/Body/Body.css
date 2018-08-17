@@ -72,3 +72,11 @@
     background: #ecc32d;
     color: #F9F6F2;
 }
+.num4096{
+    background: black;
+    color: #fff;
+}
+.num8192{
+    background: red;
+    color: #000;
+}

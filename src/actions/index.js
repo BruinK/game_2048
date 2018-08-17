@@ -25,3 +25,12 @@ export function toRight() {
     type: 'TORIGHT'
   };
 }
+
+
+// UI control
+
+export function hiddeScores() {
+  return {
+    type: 'HIDDESCORES'
+  };
+}
