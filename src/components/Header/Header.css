@@ -72,6 +72,10 @@ opacity: 0; /*结尾状态 透明度为0*/
     animation: fadeIn 1.5s ;
     -webkit-animation: fadeIn 1.5s;
 }
+.sAnimation{
+    animation: fadeIn 1.5s;
+    -webkit-animation: fadeIn 1.5s;
+}
 .hidden{
     display: none;
 }
@@ -110,4 +114,7 @@ opacity: 0; /*结尾状态 透明度为0*/
 }
 .header .headerBottom .reStart:hover{
     cursor: pointer;
+    color: #8f7a66;
+    background: #fff;
+    border: 1px solid #8f7a66;
 }

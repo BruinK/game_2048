@@ -19,41 +19,41 @@ export default class Header extends React.Component {
       actions.startGame();
     }
     handelScores=() => {
-      const { scores, bestScores } = this.props;
-      if (scores > this.state.scoresHistory) {
+      const { logicData } = this.props;
+      if (logicData.scores > this.state.scoresHistory) {
         this.setState({
-          scoresHistory: scores,
-          showScores: scores - this.state.scoresHistory
+          scoresHistory: logicData.scores,
+          showScores: logicData.scores - this.state.scoresHistory
         });
       }
-      if (bestScores > this.state.bestScoresHistory) {
+      if (logicData.bestScores > this.state.bestScoresHistory) {
         this.setState({
-          bestScoresHistory: bestScores,
-          showBestScores: bestScores - this.state.bestScoresHistory
+          bestScoresHistory: logicData.bestScores,
+          showBestScores: logicData.bestScores - this.state.bestScoresHistory
         });
       }
     }
 
     displayAdd=() => {
-      const { isHidden } = this.props;
+      const { uiData } = this.props;
       if (this.state.showBestScores !== 0) {
-        if (!isHidden) {
+        if (!uiData.isHidden) {
           return <div className="scoresAnimation ">+{this.state.showBestScores}</div>;
         }
       }
       return null;
     }
     showAdd=() => {
-      const { isHidden } = this.props;
+      const { uiData } = this.props;
       if (this.state.showScores !== 0) {
-        if (!isHidden) {
+        if (!uiData.isHidden) {
           return <div className="scoresAnimation">+{this.state.showScores}</div>;
         }
       }
       return null;
     }
     render() {
-      const { scores, bestScores } = this.props;
+      const { logicData } = this.props;
       return (
         <div className="header">
           <div className="headerTop">
@@ -63,14 +63,17 @@ export default class Header extends React.Component {
                 this.handelScores()
               }
               <div>Scores</div>
-              <div>{scores}</div>
+              <div > {
+                logicData.scores
+              }
+              </div>
               {
                 this.showAdd()
               }
             </div>
             <div className="scores">
               <div>Best Scores</div>
-              <div>{bestScores}</div>
+              <div>{logicData.bestScores}</div>
               {
                 this.displayAdd()
               }

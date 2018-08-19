@@ -72,10 +72,13 @@ export default class Body extends React.Component {
     }
   }
     getCell=() => {
-      const { data } = this.props;
-      return data.map((item, id) => item.map((num, idx) => {
+      const { logicData } = this.props;
+      return logicData.mainList.map((item, id) => item.map((num, idx) => {
         if (num === 0) {
           return <div className="gameCell num0" key={`${id}-${idx}`} />;
+        }
+        if (logicData.newNumList[id][idx] === 1) {
+          return <div className={`gameCell num${num} animation`} key={`${id}-${idx}`}>{num}</div>;
         }
         return <div className={`gameCell num${num}`} key={`${id}-${idx}`}>{num}</div>;
       }));
@@ -86,7 +89,7 @@ export default class Body extends React.Component {
         <div className="gameBody" onTouchStart={this.onlistenTouchStart} onTouchEnd={this.onListenTouchEnd}>
           {
                 this.getCell()
-            }
+          }
         </div>
       );
     }

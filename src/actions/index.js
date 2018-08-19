@@ -34,3 +34,9 @@ export function hiddeScores() {
     type: 'HIDDESCORES'
   };
 }
+
+export function closeMask() {
+  return {
+    type: 'CLOSEMASK'
+  };
+}

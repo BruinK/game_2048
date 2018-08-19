@@ -25,6 +25,26 @@
     outline: 10px solid #bbada0;
     text-align: center;
 }
+@keyframes newOne {
+    0% {
+       transform: rotate3D(0, 1, 0, 45deg);
+    }
+    25% {
+        transform: rotate3D(0, 1, 0, 135deg);
+    }
+    50% {
+        transform: rotate3D(0, 1, 0, 180deg);
+    }
+    75% {
+        transform: rotate3D(0, 1, 0, 315deg);
+    }
+    100% {
+        transform: rotate3D(0, 1, 0, 360deg);
+    }
+}
+.animation{
+    animation: newOne .8s ease-in-out;
+}
 .num0{
     background: #e1d5ca;
 }

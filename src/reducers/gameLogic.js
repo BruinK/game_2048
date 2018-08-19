@@ -15,11 +15,11 @@ function randomNum(minNum, maxNum) {
 function getNewNum(optionList, type) {
   const tempList = optionList;
 
+  const newNumList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
   let order1 = -1;
   let order2 = -1;
   let symbol = -1;
   let flag = type;
-  console.log('temp', tempList);
   do {
     order1 = randomNum(1, 4);
     order2 = randomNum(1, 4);
@@ -30,10 +30,12 @@ function getNewNum(optionList, type) {
         case 3:
         case 2:
           tempList[order1 - 1][order2 - 1] = 2;
+          newNumList[order1 - 1][order2 - 1] = 1;
           flag -= 1;
           break;
         case 4:
           tempList[order1 - 1][order2 - 1] = 4;
+          newNumList[order1 - 1][order2 - 1] = 1;
           flag -= 1;
           break;
         default:
@@ -41,7 +43,8 @@ function getNewNum(optionList, type) {
       }
     }
   } while (flag !== 0);
-  return tempList;
+  const listObj = { tempList, newNumList };
+  return listObj;
 }
 
 function moveToleft(moveList) {
@@ -87,7 +90,6 @@ function moveToleft(moveList) {
       }
     });
   });
-  console.log('空格', isEmpty);
   // 判断是否死亡
   if (isEmpty.length === 0) {
     for (let i = 0; i < middleList.length; i++) {
@@ -105,21 +107,30 @@ function moveToleft(moveList) {
       }
     }
     if (overFlag) {
-      alert('Game Over');
       const isOver = true;
-      const obj = { middleList, scoresTemp, isOver };
+      const newNumList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+      const obj = {
+        middleList, scoresTemp, isOver, isEmpty, newNumList
+      };
       return obj;
     }
   }
 
   if (JSON.stringify(moveList) !== JSON.stringify(middleList)) {
-    middleList = getNewNum(middleList, 1);
+    const listObj = getNewNum(middleList, 1);
+    middleList = listObj.tempList;
+    const { newNumList } = listObj;
     const isOver = false;
-    const obj = { middleList, scoresTemp, isOver };
+    const obj = {
+      middleList, scoresTemp, isOver, isEmpty, newNumList
+    };
     return obj;
   }
   const isOver = false;
-  const obj = { middleList, scoresTemp, isOver };
+  const newNumList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+  const obj = {
+    middleList, scoresTemp, isOver, isEmpty, newNumList
+  };
   return obj;
 }
 
@@ -128,16 +139,20 @@ export default function gameLogic(state = originData, action) {
     case 'STARTGAME': {
       const newState = { ...state };
       newState.mainList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-      // newState.mainList = [[0, 2, 4, 8], [16, 4096, 32, 8192], [64, 0, 128, 256],[512, 1024, 2048, 0]];
+      // newState.mainList = [[0, 2, 4, 8], [16, 4096, 32, 8192], [64, 0, 128, 256], [512, 1024, 2048, 0]];
 
-      const newList = getNewNum(newState.mainList, 2);
+      const listObj = getNewNum(newState.mainList, 2);
+
       newState.scores = 0;
-      newState.mainList = [...newList];
+      newState.mainList = [...listObj.tempList];
+      newState.newNumList = [...listObj.newNumList];
+      newState.overFlag = false;
       return newState;
     }
     case 'TOUP': {
       const newState = { ...state };
       const tempList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+      const newNumTemp = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
       for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 4; j++) {
           tempList[i][j] = newState.mainList[j][3 - i];
@@ -145,14 +160,15 @@ export default function gameLogic(state = originData, action) {
       }
 
       const objTemp = moveToleft(tempList);
-
       const upList = objTemp.middleList;
-
       for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 4; j++) {
           tempList[j][i] = upList[3 - i][j];
+          newNumTemp[j][i] = objTemp.newNumList[3 - i][j];
         }
       }
+      newState.newNumList = [...newNumTemp];
+
       if (objTemp.isOver) {
         if (newState.bestScores < newState.scores) {
           newState.bestScores = newState.scores;
@@ -160,6 +176,8 @@ export default function gameLogic(state = originData, action) {
       }
       newState.scores += objTemp.scoresTemp;
       newState.mainList = [...tempList];
+      newState.overFlag = objTemp.isOver;
+
 
       if (newState.scores >= newState.bestScores) {
         newState.bestScores = newState.scores;
@@ -169,6 +187,7 @@ export default function gameLogic(state = originData, action) {
     case 'TODOWN': {
       const newState = { ...state };
       const tempList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+      const newNumTemp = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
       for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 4; j++) {
           tempList[j][i] = newState.mainList[3 - i][j];
@@ -176,19 +195,25 @@ export default function gameLogic(state = originData, action) {
       }
 
       const objTemp = moveToleft(tempList);
+
       const upList = objTemp.middleList;
 
       for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 4; j++) {
           tempList[i][j] = upList[j][3 - i];
+          newNumTemp[i][j] = objTemp.newNumList[j][3 - i];
         }
       }
+
+      newState.newNumList = [...newNumTemp];
+
       if (objTemp.isOver) {
         if (newState.bestScores < newState.scores) {
           newState.bestScores = newState.scores;
         }
       }
       newState.mainList = [...tempList];
+      newState.overFlag = objTemp.isOver;
       newState.scores += objTemp.scoresTemp;
 
       if (newState.scores >= newState.bestScores) {
@@ -200,13 +225,17 @@ export default function gameLogic(state = originData, action) {
       const newState = { ...state };
 
       const objTemp = moveToleft(newState.mainList);
+      newState.newNumList = [...objTemp.newNumList];
+
       const tempList = objTemp.middleList;
+
       if (objTemp.isOver) {
         if (newState.bestScores < newState.scores) {
           newState.bestScores = newState.scores;
         }
       }
       newState.mainList = [...tempList];
+      newState.overFlag = objTemp.isOver;
       newState.scores += objTemp.scoresTemp;
 
       if (newState.scores >= newState.bestScores) {
@@ -217,14 +246,21 @@ export default function gameLogic(state = originData, action) {
     case 'TORIGHT': {
       const newState = { ...state };
       const tempList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+      const newNumTemp = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+
       newState.mainList.forEach((item, idx) => {
         tempList[idx] = [...item.reverse()];
       });
 
       const objTemp = moveToleft(tempList);
-      const downList = objTemp.middleList;
 
-      downList.forEach((item, idx) => {
+      objTemp.newNumList.forEach((item, idx) => {
+        newNumTemp[idx] = [...item.reverse()];
+      });
+      newState.newNumList = [...newNumTemp];
+
+
+      objTemp.middleList.forEach((item, idx) => {
         tempList[idx] = [...item.reverse()];
       });
 
@@ -234,12 +270,19 @@ export default function gameLogic(state = originData, action) {
         }
       }
       newState.mainList = [...tempList];
+      newState.overFlag = objTemp.isOver;
       newState.scores += objTemp.scoresTemp;
 
       if (newState.scores >= newState.bestScores) {
         newState.bestScores = newState.scores;
       }
       return newState;
+    }
+    case 'CLOSEMASK': {
+      return {
+        ...state,
+        overFlag: false
+      };
     }
     default:
       return state;
