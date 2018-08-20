@@ -10,4 +10,77 @@
   margin: 0 auto;
 }
 
+@media screen and (max-width: 630px){
+  .App{
+    height: 100%;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .header {
+    margin-top: 60px;
+    height: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+  .header .headerTop{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+.header .headerTop .scores {
+  position: relative;
+  width: 150px;
+  height: 80px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: #BBADA0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
 
+  .header .headerTop .title{
+    display: none;
+  }
+  .header .headerBottom {
+    height: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  .header .headerBottom .intro>span:nth-child(1){
+    display: none;
+  }
+  .header .headerBottom .intro {
+    margin: 0 20px;
+    height: 50%;
+  }
+  .gameBody {
+    box-sizing: border-box;
+    height:100vw;
+    width: 98vw;
+    margin: 0 auto;
+    background: #FFF;
+    border: 1vw solid #bbada0;
+    position: relative;
+    font-size: 40px;
+    font-weight: bold;
+  }
+
+  .gameBody .gameCell {
+    box-sizing: border-box;
+    float: left;
+    height: 24.5vw;
+    line-height: 24.5vw;
+    width: 24vw;
+    border: 1vw solid #bbada0;
+    border-radius: 5px;
+    box-shadow: 0 0 0 0.5vw #bbada0;
+    outline: 0.5vw solid #bbada0;
+    text-align: center;
+  }
+}

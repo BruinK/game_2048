@@ -17,22 +17,18 @@ export default class Body extends React.Component {
       case 38:
       case 87:
         actions.toUp();
-        actions.hiddeScores();
         break;
       case 40:
       case 83:
         actions.toDown();
-        actions.hiddeScores();
         break;
       case 37:
       case 65:
         actions.toLeft();
-        actions.hiddeScores();
         break;
       case 39:
       case 68:
         actions.toRight();
-        actions.hiddeScores();
         break;
       default:
         break;
@@ -55,19 +51,15 @@ export default class Body extends React.Component {
     if (Math.abs(X) > Math.abs(Y)) {
       if (X > 0) {
         actions.toRight();
-        actions.hiddeScores();
       } else {
         actions.toLeft();
-        actions.hiddeScores();
       }
     }
     if (Math.abs(X) < Math.abs(Y)) {
       if (Y > 0) {
         actions.toDown();
-        actions.hiddeScores();
       } else {
         actions.toUp();
-        actions.hiddeScores();
       }
     }
   }

@@ -1,8 +1,4 @@
-@charset "UT-8";
-*{
-    margin: 0;
-    padding: 0;
-}
+
 .header{
     margin-top: 60px;
     height: 200px;
@@ -13,7 +9,7 @@
 }
 .header .headerTop{
     width: 100%;
-    height: 100px;
+    height: 50%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -36,6 +32,7 @@
     margin: 0 30px;
     border-radius: 8px;
     background: #BBADA0;
+    text-align: center;
     display: flex;
     flex-direction:column;
     justify-content: space-around;
@@ -52,16 +49,28 @@
     color: #fff;
 }
 
-@keyframes fadeIn {
-0% {
-opacity: 1; /*初始状态 透明度为0*/
+@keyframes fadeInOne {
+    0% {
+        opacity: 1; /*初始状态 透明度为0*/
+    }
+
+    100% {
+        opacity: 0; /*结尾状态 透明度为0*/
+    }
 }
 
-100% {
-opacity: 0; /*结尾状态 透明度为0*/
+@keyframes fadeInTwo {
+    0% {
+        opacity: 1;
+        /*初始状态 透明度为0*/
+    }
+    100% {
+        opacity: 0;
+        /*结尾状态 透明度为0*/
+    }
 }
-}
-.header .headerTop .scores .scoresAnimation {
+
+.header .headerTop .scores .scoresAnimation-true {
     position: absolute;
     font-size: 28px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -69,20 +78,23 @@ opacity: 0; /*结尾状态 透明度为0*/
     opacity: 0;
     top: 60px;
     left: 20px;
-    animation: fadeIn 1.5s ;
-    -webkit-animation: fadeIn 1.5s;
+    animation: fadeInOne 2s ;
+    -webkit-animation: fadeInOne 2s;
 }
-.sAnimation{
-    animation: fadeIn 1.5s;
-    -webkit-animation: fadeIn 1.5s;
+.header .headerTop .scores .scoresAnimation-false {
+    position: absolute;
+    font-size: 28px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #000;
+    opacity: 0;
+    top: 60px;
+    left: 20px;
+    animation: fadeInTwo 2s;
+    -webkit-animation: fadeInTwo 2s;
 }
-.hidden{
-    display: none;
-}
-
 
 .header .headerBottom{
-    height: 100px;
+    height: 50%;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -90,7 +102,7 @@ opacity: 0; /*结尾状态 透明度为0*/
 
 .header .headerBottom .intro{
     margin: 20px;
-    height: 100px;
+    height: 50%;
 }
 .header .headerBottom .intro>span{
     font-size: 18px;

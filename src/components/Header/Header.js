@@ -6,7 +6,9 @@ export default class Header extends React.Component {
       scoresHistory: 0,
       bestScoresHistory: 0,
       showScores: 0,
-      showBestScores: 0
+      showBestScores: 0,
+      changeScoresFlag: false,
+      changeBSFlag: false
     }
 
     handelReStart=() => {
@@ -23,32 +25,35 @@ export default class Header extends React.Component {
       if (logicData.scores > this.state.scoresHistory) {
         this.setState({
           scoresHistory: logicData.scores,
-          showScores: logicData.scores - this.state.scoresHistory
+          showScores: logicData.scores - this.state.scoresHistory,
+          changeScoresFlag: !this.state.changeScoresFlag
         });
       }
       if (logicData.bestScores > this.state.bestScoresHistory) {
         this.setState({
           bestScoresHistory: logicData.bestScores,
-          showBestScores: logicData.bestScores - this.state.bestScoresHistory
+          showBestScores: logicData.bestScores - this.state.bestScoresHistory,
+          changeBSFlag: !this.state.changeBSFlag
         });
       }
     }
 
     displayAdd=() => {
-      const { uiData } = this.props;
       if (this.state.showBestScores !== 0) {
-        if (!uiData.isHidden) {
-          return <div className="scoresAnimation ">+{this.state.showBestScores}</div>;
-        }
+        return (
+          <div className={`scoresAnimation-${this.state.changeBSFlag}`}>
+              +{this.state.showBestScores}
+          </div>);
       }
       return null;
     }
     showAdd=() => {
-      const { uiData } = this.props;
+      console.log('FLAG', this.state.changeScoresFlag);
       if (this.state.showScores !== 0) {
-        if (!uiData.isHidden) {
-          return <div className="scoresAnimation">+{this.state.showScores}</div>;
-        }
+        return (
+          <div className={`scoresAnimation-${this.state.changeScoresFlag}`}>
+            +{this.state.showScores}
+          </div>);
       }
       return null;
     }
@@ -72,7 +77,7 @@ export default class Header extends React.Component {
               }
             </div>
             <div className="scores">
-              <div>Best Scores</div>
+              <div>Record</div>
               <div>{logicData.bestScores}</div>
               {
                 this.displayAdd()
