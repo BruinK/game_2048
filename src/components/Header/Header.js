@@ -48,7 +48,6 @@ export default class Header extends React.Component {
       return null;
     }
     showAdd=() => {
-      console.log('FLAG', this.state.changeScoresFlag);
       if (this.state.showScores !== 0) {
         return (
           <div className={`scoresAnimation-${this.state.changeScoresFlag}`}>

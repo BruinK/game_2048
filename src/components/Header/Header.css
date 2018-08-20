@@ -15,7 +15,6 @@
     align-items: center;
 }
 .header .headerTop .title{
-
     font-size: 50px;
     font-family: 'Miscrosoft Yahei';
     margin-left:20px;
@@ -51,22 +50,33 @@
 
 @keyframes fadeInOne {
     0% {
-        opacity: 1; /*初始状态 透明度为0*/
+        top: 60px;
+        opacity: 1; 
     }
-
+    50% {
+        top: 30px;
+        opacity: 0.5;
+    }
     100% {
-        opacity: 0; /*结尾状态 透明度为0*/
+        top:0px;
+        opacity: 0; 
     }
 }
 
 @keyframes fadeInTwo {
     0% {
+        top: 60px;
         opacity: 1;
-        /*初始状态 透明度为0*/
     }
+
+    50% {
+        top: 30px;
+        opacity: 0.5;
+    }
+
     100% {
+        top: 0px;
         opacity: 0;
-        /*结尾状态 透明度为0*/
     }
 }
 
@@ -76,7 +86,6 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color:#000;
     opacity: 0;
-    top: 60px;
     left: 20px;
     animation: fadeInOne 2s ;
     -webkit-animation: fadeInOne 2s;

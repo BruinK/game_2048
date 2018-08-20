@@ -4,7 +4,8 @@ import './Body.css';
 export default class Body extends React.Component {
   state = {
     startPointX: 0,
-    startPointY: 0
+    startPointY: 0,
+    combineFlag: true
   }
   componentWillMount() {
     const { actions } = this.props;
@@ -13,6 +14,9 @@ export default class Body extends React.Component {
   }
   onListenKeydown=e => {
     const { actions } = this.props;
+    this.setState({
+      combineFlag: !this.state.combineFlag
+    });
     switch (e.keyCode) {
       case 38:
       case 87:
@@ -48,6 +52,9 @@ export default class Body extends React.Component {
     console.log('Y2', e.changedTouches[0].screenY);
     const X = e.changedTouches[0].screenX - this.state.startPointX;
     const Y = e.changedTouches[0].screenY - this.state.startPointY;
+    this.setState({
+      combineFlag: !this.state.combineFlag
+    });
     if (Math.abs(X) > Math.abs(Y)) {
       if (X > 0) {
         actions.toRight();
@@ -71,6 +78,9 @@ export default class Body extends React.Component {
         }
         if (logicData.newNumList[id][idx] === 1) {
           return <div className={`gameCell num${num} animation`} key={`${id}-${idx}`}>{num}</div>;
+        }
+        if (logicData.combineList[id][idx] === 2) {
+          return <div className={`gameCell num${num} combineAnimation${this.state.combineFlag}`} key={`${id}-${idx}`}>{num}</div>;
         }
         return <div className={`gameCell num${num}`} key={`${id}-${idx}`}>{num}</div>;
       }));

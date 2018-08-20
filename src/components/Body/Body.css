@@ -23,22 +23,73 @@
 @keyframes newOne {
     0% {
        transform: rotate3D(0, 1, 0, 45deg);
+       -webkit-transform: rotate3D(0, 1, 0, 45deg);
     }
     25% {
         transform: rotate3D(0, 1, 0, 135deg);
+        -webkit-transform: rotate3D(0, 1, 0, 135deg);
     }
     50% {
         transform: rotate3D(0, 1, 0, 180deg);
+        -webkit-transform: rotate3D(0, 1, 0, 180deg);
     }
     75% {
         transform: rotate3D(0, 1, 0, 315deg);
+        -webkit-transform: rotate3D(0, 1, 0, 315deg);
     }
     100% {
         transform: rotate3D(0, 1, 0, 360deg);
+        -webkit-transform: rotate3D(0, 1, 0, 360deg);
     }
 }
 .animation{
     animation: newOne .8s ease-in-out;
+    -webkit-animation: newOne .8s ease-in-out;
+}
+@keyframes combineOne {
+    0% {
+        transform: scale(0.8);
+        -webkit-transform: scale(0.8);
+    }
+    25% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+    }
+    75% {
+        transform: scale(1.2);
+        -webkit-transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+    }
+}
+@keyframes combineTwo {
+    0% {
+        transform: scale(0.8);
+        -webkit-transform: scale(0.8);
+    }
+    25% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+    }
+    75% {
+        transform: scale(1.2);
+        -webkit-transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+    }
+}
+
+.combineAnimationtrue {
+    animation: combineOne .8s ease-in-out;
+    -webkit-animation: combineOne .8s ease-in-out;
+}
+.combineAnimationfalse {
+    animation: combineTwo .8s ease-in-out;
+    -webkit-animation: combineTwo .8s ease-in-out;
 }
 .num0{
     background: #e1d5ca;

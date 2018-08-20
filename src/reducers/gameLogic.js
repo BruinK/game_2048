@@ -49,12 +49,15 @@ function getNewNum(optionList, type) {
 
 function moveToleft(moveList) {
   const temp = [];
+  const combineTemp = [0, 0, 0, 0];
   let scoresTemp = 0;
   const isEmpty = [];
   let overFlag = true;
   let middleList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+  const combineList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
   moveList.forEach((item, idx) => {
     temp.length = 0;
+    combineTemp.length = 0;
     item.map(it => temp.push(it));
     // 合并
     for (let i = 0; i < temp.length; i++) {
@@ -70,9 +73,17 @@ function moveToleft(moveList) {
             scoresTemp += 2 * addTemp;
             temp[k] = 0;
             flag = 1;
+            combineTemp[i] = 2;
           }
           if (flag) break;
         }
+      }
+    }
+    console.log('hebing', combineTemp);
+    for (let k = combineTemp.length - 1; k >= 0; k--) {
+      if (combineTemp[k] !== 0) {
+        combineList[idx].length -= 1;
+        combineList[idx].unshift(combineTemp[k]);
       }
     }
     // 放入中间数组
@@ -83,6 +94,7 @@ function moveToleft(moveList) {
       }
     }
   });
+  // 记录当前空格
   middleList.forEach((item, idx) => {
     item.forEach((it, id) => {
       if (it === 0) {
@@ -110,7 +122,7 @@ function moveToleft(moveList) {
       const isOver = true;
       const newNumList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
       const obj = {
-        middleList, scoresTemp, isOver, isEmpty, newNumList
+        middleList, scoresTemp, isOver, isEmpty, newNumList, combineList
       };
       return obj;
     }
@@ -122,14 +134,14 @@ function moveToleft(moveList) {
     const { newNumList } = listObj;
     const isOver = false;
     const obj = {
-      middleList, scoresTemp, isOver, isEmpty, newNumList
+      middleList, scoresTemp, isOver, isEmpty, newNumList, combineList
     };
     return obj;
   }
   const isOver = false;
   const newNumList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
   const obj = {
-    middleList, scoresTemp, isOver, isEmpty, newNumList
+    middleList, scoresTemp, isOver, isEmpty, newNumList, combineList
   };
   return obj;
 }
@@ -153,6 +165,7 @@ export default function gameLogic(state = originData, action) {
       const newState = { ...state };
       const tempList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
       const newNumTemp = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+      const combineTemp = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
       for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 4; j++) {
           tempList[i][j] = newState.mainList[j][3 - i];
@@ -165,9 +178,12 @@ export default function gameLogic(state = originData, action) {
         for (let j = 0; j < 4; j++) {
           tempList[j][i] = upList[3 - i][j];
           newNumTemp[j][i] = objTemp.newNumList[3 - i][j];
+          combineTemp[j][i] = objTemp.combineList[3 - i][j];
         }
       }
       newState.newNumList = [...newNumTemp];
+      newState.combineList = [...combineTemp];
+
 
       if (objTemp.isOver) {
         if (newState.bestScores < newState.scores) {
@@ -188,6 +204,7 @@ export default function gameLogic(state = originData, action) {
       const newState = { ...state };
       const tempList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
       const newNumTemp = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+      const combineTemp = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
       for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 4; j++) {
           tempList[j][i] = newState.mainList[3 - i][j];
@@ -202,10 +219,12 @@ export default function gameLogic(state = originData, action) {
         for (let j = 0; j < 4; j++) {
           tempList[i][j] = upList[j][3 - i];
           newNumTemp[i][j] = objTemp.newNumList[j][3 - i];
+          combineTemp[i][j] = objTemp.combineList[j][3 - i];
         }
       }
 
       newState.newNumList = [...newNumTemp];
+      newState.combineList = [...combineTemp];
 
       if (objTemp.isOver) {
         if (newState.bestScores < newState.scores) {
@@ -226,8 +245,14 @@ export default function gameLogic(state = originData, action) {
 
       const objTemp = moveToleft(newState.mainList);
       newState.newNumList = [...objTemp.newNumList];
+      newState.combineList = [...objTemp.combineList];
 
       const tempList = objTemp.middleList;
+      console.log('初始', newState.mainList);
+      console.log('接收', objTemp.middleList);
+      console.log('合并', objTemp.combineList);
+      console.log('新增', objTemp.newNumList);
+
 
       if (objTemp.isOver) {
         if (newState.bestScores < newState.scores) {
@@ -247,6 +272,7 @@ export default function gameLogic(state = originData, action) {
       const newState = { ...state };
       const tempList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
       const newNumTemp = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+      const combineTemp = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 
       newState.mainList.forEach((item, idx) => {
         tempList[idx] = [...item.reverse()];
@@ -259,7 +285,10 @@ export default function gameLogic(state = originData, action) {
       });
       newState.newNumList = [...newNumTemp];
 
-
+      objTemp.combineList.forEach((item, idx) => {
+        combineTemp[idx] = [...item.reverse()];
+      });
+      newState.combineList = [...combineTemp];
       objTemp.middleList.forEach((item, idx) => {
         tempList[idx] = [...item.reverse()];
       });
