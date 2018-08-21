@@ -54,11 +54,11 @@
         opacity: 1; 
     }
     50% {
-        top: 30px;
+        top: 20px;
         opacity: 0.5;
     }
     100% {
-        top:0px;
+        top:-20px;
         opacity: 0; 
     }
 }
@@ -70,12 +70,12 @@
     }
 
     50% {
-        top: 30px;
+        top: 20px;
         opacity: 0.5;
     }
 
     100% {
-        top: 0px;
+        top: -20px;
         opacity: 0;
     }
 }

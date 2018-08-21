@@ -1,313 +1,84 @@
 import { originData } from './INIT_STORE';
+import * as ActionType from '../const/index';
+import getNewNum from '../utils/getNewNum';
+import moveToleft from '../utils/moveToleft';
+import create2DArr from '../utils/create2DArr';
+import reverseList from '../utils/reverseList';
+import matrixTransform from '../utils/matrixTransform';
+import handelScores from '../utils/handelScores';
 
-// 生成从minNum到maxNum的随机数
-function randomNum(minNum, maxNum) {
-  switch (arguments.length) {
-    case 1:
-      return parseInt(Math.random() * minNum + 1, 10);
-    case 2:
-      return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
-    default:
-      return 0;
-  }
-}
-
-function getNewNum(optionList, type) {
-  const tempList = optionList;
-
-  const newNumList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-  let order1 = -1;
-  let order2 = -1;
-  let symbol = -1;
-  let flag = type;
-  do {
-    order1 = randomNum(1, 4);
-    order2 = randomNum(1, 4);
-    symbol = randomNum(1, 4);
-    if (tempList[order1 - 1][order2 - 1] === 0) {
-      switch (symbol) {
-        case 1:
-        case 3:
-        case 2:
-          tempList[order1 - 1][order2 - 1] = 2;
-          newNumList[order1 - 1][order2 - 1] = 1;
-          flag -= 1;
+export default function gameLogic(state = originData, action) {
+  const tempList = create2DArr();
+  const newNumTemp = create2DArr();
+  const combineTemp = create2DArr();
+  const mainTemp = create2DArr();
+  switch (action.type) {
+    case ActionType.STARTGAME: {
+      const objTemp = getNewNum(mainTemp, 2);
+      return {
+        ...state,
+        scores: 0,
+        mainList: [...objTemp.tempList],
+        newNumList: [...objTemp.newNumList],
+        combineList: create2DArr(),
+        overFlag: false
+      };
+    }
+    //  四个方向的移动只考虑为向左移动，
+    //  其他方向的先把矩阵旋转为向左，
+    //  再调用左移函数，得到需要的数据，
+    //  最后统一进行store存储
+    case ActionType.TOUP:
+    case ActionType.TODOWN:
+    case ActionType.TOLEFT:
+    case ActionType.TORIGHT: {
+      const newState = { ...state };
+      let objTemp = {};
+      switch (action.type) {
+        case ActionType.TOUP: {
+          objTemp = moveToleft(matrixTransform(newState.mainList, tempList, 1));
+          newState.mainList = [...matrixTransform(objTemp.middleList, tempList, 2)];
+          newState.newNumList = [...matrixTransform(objTemp.newNumList, newNumTemp, 2)];
+          newState.combineList = [...matrixTransform(objTemp.combineList, combineTemp, 2)];
           break;
-        case 4:
-          tempList[order1 - 1][order2 - 1] = 4;
-          newNumList[order1 - 1][order2 - 1] = 1;
-          flag -= 1;
+        }
+        case ActionType.TODOWN: {
+          objTemp = moveToleft(matrixTransform(newState.mainList, tempList, 2));
+          newState.mainList = [...matrixTransform(objTemp.middleList, tempList, 1)];
+          newState.newNumList = [...matrixTransform(objTemp.newNumList, newNumTemp, 1)];
+          newState.combineList = [...matrixTransform(objTemp.combineList, combineTemp, 1)];
           break;
+        }
+        case ActionType.TOLEFT: {
+          objTemp = moveToleft(newState.mainList);
+          newState.newNumList = [...objTemp.newNumList];
+          newState.combineList = [...objTemp.combineList];
+          newState.mainList = [...objTemp.middleList];
+          break;
+        }
+        case ActionType.TORIGHT: {
+          objTemp = moveToleft(reverseList(newState.mainList, mainTemp));
+          newState.newNumList = reverseList(objTemp.newNumList, newNumTemp);
+          newState.combineList = reverseList(objTemp.combineList, combineTemp);
+          newState.mainList = reverseList(objTemp.middleList, tempList);
+          break;
+        }
         default:
           break;
       }
-    }
-  } while (flag !== 0);
-  const listObj = { tempList, newNumList };
-  return listObj;
-}
 
-function moveToleft(moveList) {
-  const temp = [];
-  const combineTemp = [0, 0, 0, 0];
-  let scoresTemp = 0;
-  const isEmpty = [];
-  let overFlag = true;
-  let middleList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-  const combineList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-  moveList.forEach((item, idx) => {
-    temp.length = 0;
-    combineTemp.length = 0;
-    item.map(it => temp.push(it));
-    // 合并
-    for (let i = 0; i < temp.length; i++) {
-      if (temp[i] !== 0) {
-        for (let k = i + 1; k < temp.length; k++) {
-          // 添加判断 避免 2 2 4 8 变成一个16
-          let flag = 0;
-          if (temp[k] !== 0 && temp[k] !== temp[i]) break;
-
-          if (temp[i] === temp[k]) {
-            const addTemp = temp[i];
-            temp[i] = 2 * addTemp;
-            scoresTemp += 2 * addTemp;
-            temp[k] = 0;
-            flag = 1;
-            combineTemp[i] = 2;
-          }
-          if (flag) break;
-        }
-      }
-    }
-    console.log('hebing', combineTemp);
-    for (let k = combineTemp.length - 1; k >= 0; k--) {
-      if (combineTemp[k] !== 0) {
-        combineList[idx].length -= 1;
-        combineList[idx].unshift(combineTemp[k]);
-      }
-    }
-    // 放入中间数组
-    for (let j = temp.length - 1; j >= 0; j--) {
-      if (temp[j] !== 0) {
-        middleList[idx].length -= 1;
-        middleList[idx].unshift(temp[j]);
-      }
-    }
-  });
-  // 记录当前空格
-  middleList.forEach((item, idx) => {
-    item.forEach((it, id) => {
-      if (it === 0) {
-        isEmpty.push(`${idx}-${id}`);
-      }
-    });
-  });
-  // 判断是否死亡
-  if (isEmpty.length === 0) {
-    for (let i = 0; i < middleList.length; i++) {
-      for (let j = 0; j < middleList.length; j++) {
-        if (i + 1 === middleList.length) {
-          break;
-        } else if (middleList[i][j] === middleList[i + 1][j]) {
-          overFlag = false;
-        }
-        if (j + 1 === middleList.length) {
-          break;
-        } else if (middleList[i][j] === middleList[i][j + 1]) {
-          overFlag = false;
-        }
-      }
-    }
-    if (overFlag) {
-      const isOver = true;
-      const newNumList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-      const obj = {
-        middleList, scoresTemp, isOver, isEmpty, newNumList, combineList
+      const tempState = { ...handelScores(newState, objTemp) };
+      return {
+        ...state,
+        mainList: newState.mainList,
+        newNumList: newState.newNumList,
+        combineList: newState.combineList,
+        scores: tempState.scores,
+        bestScores: tempState.bestScores,
+        overFlag: tempState.overFlag
       };
-      return obj;
     }
-  }
-
-  if (JSON.stringify(moveList) !== JSON.stringify(middleList)) {
-    const listObj = getNewNum(middleList, 1);
-    middleList = listObj.tempList;
-    const { newNumList } = listObj;
-    const isOver = false;
-    const obj = {
-      middleList, scoresTemp, isOver, isEmpty, newNumList, combineList
-    };
-    return obj;
-  }
-  const isOver = false;
-  const newNumList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-  const obj = {
-    middleList, scoresTemp, isOver, isEmpty, newNumList, combineList
-  };
-  return obj;
-}
-
-export default function gameLogic(state = originData, action) {
-  switch (action.type) {
-    case 'STARTGAME': {
-      const newState = { ...state };
-      newState.mainList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-      // newState.mainList = [[0, 2, 4, 8], [16, 4096, 32, 8192], [64, 0, 128, 256], [512, 1024, 2048, 0]];
-
-      const listObj = getNewNum(newState.mainList, 2);
-
-      newState.scores = 0;
-      newState.mainList = [...listObj.tempList];
-      newState.newNumList = [...listObj.newNumList];
-      newState.overFlag = false;
-      return newState;
-    }
-    case 'TOUP': {
-      const newState = { ...state };
-      const tempList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-      const newNumTemp = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-      const combineTemp = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-      for (let i = 0; i < 4; i++) {
-        for (let j = 0; j < 4; j++) {
-          tempList[i][j] = newState.mainList[j][3 - i];
-        }
-      }
-
-      const objTemp = moveToleft(tempList);
-      const upList = objTemp.middleList;
-      for (let i = 0; i < 4; i++) {
-        for (let j = 0; j < 4; j++) {
-          tempList[j][i] = upList[3 - i][j];
-          newNumTemp[j][i] = objTemp.newNumList[3 - i][j];
-          combineTemp[j][i] = objTemp.combineList[3 - i][j];
-        }
-      }
-      newState.newNumList = [...newNumTemp];
-      newState.combineList = [...combineTemp];
-
-
-      if (objTemp.isOver) {
-        if (newState.bestScores < newState.scores) {
-          newState.bestScores = newState.scores;
-        }
-      }
-      newState.scores += objTemp.scoresTemp;
-      newState.mainList = [...tempList];
-      newState.overFlag = objTemp.isOver;
-
-
-      if (newState.scores >= newState.bestScores) {
-        newState.bestScores = newState.scores;
-      }
-      return newState;
-    }
-    case 'TODOWN': {
-      const newState = { ...state };
-      const tempList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-      const newNumTemp = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-      const combineTemp = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-      for (let i = 0; i < 4; i++) {
-        for (let j = 0; j < 4; j++) {
-          tempList[j][i] = newState.mainList[3 - i][j];
-        }
-      }
-
-      const objTemp = moveToleft(tempList);
-
-      const upList = objTemp.middleList;
-
-      for (let i = 0; i < 4; i++) {
-        for (let j = 0; j < 4; j++) {
-          tempList[i][j] = upList[j][3 - i];
-          newNumTemp[i][j] = objTemp.newNumList[j][3 - i];
-          combineTemp[i][j] = objTemp.combineList[j][3 - i];
-        }
-      }
-
-      newState.newNumList = [...newNumTemp];
-      newState.combineList = [...combineTemp];
-
-      if (objTemp.isOver) {
-        if (newState.bestScores < newState.scores) {
-          newState.bestScores = newState.scores;
-        }
-      }
-      newState.mainList = [...tempList];
-      newState.overFlag = objTemp.isOver;
-      newState.scores += objTemp.scoresTemp;
-
-      if (newState.scores >= newState.bestScores) {
-        newState.bestScores = newState.scores;
-      }
-      return newState;
-    }
-    case 'TOLEFT': {
-      const newState = { ...state };
-
-      const objTemp = moveToleft(newState.mainList);
-      newState.newNumList = [...objTemp.newNumList];
-      newState.combineList = [...objTemp.combineList];
-
-      const tempList = objTemp.middleList;
-      console.log('初始', newState.mainList);
-      console.log('接收', objTemp.middleList);
-      console.log('合并', objTemp.combineList);
-      console.log('新增', objTemp.newNumList);
-
-
-      if (objTemp.isOver) {
-        if (newState.bestScores < newState.scores) {
-          newState.bestScores = newState.scores;
-        }
-      }
-      newState.mainList = [...tempList];
-      newState.overFlag = objTemp.isOver;
-      newState.scores += objTemp.scoresTemp;
-
-      if (newState.scores >= newState.bestScores) {
-        newState.bestScores = newState.scores;
-      }
-      return newState;
-    }
-    case 'TORIGHT': {
-      const newState = { ...state };
-      const tempList = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-      const newNumTemp = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-      const combineTemp = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-
-      newState.mainList.forEach((item, idx) => {
-        tempList[idx] = [...item.reverse()];
-      });
-
-      const objTemp = moveToleft(tempList);
-
-      objTemp.newNumList.forEach((item, idx) => {
-        newNumTemp[idx] = [...item.reverse()];
-      });
-      newState.newNumList = [...newNumTemp];
-
-      objTemp.combineList.forEach((item, idx) => {
-        combineTemp[idx] = [...item.reverse()];
-      });
-      newState.combineList = [...combineTemp];
-      objTemp.middleList.forEach((item, idx) => {
-        tempList[idx] = [...item.reverse()];
-      });
-
-      if (objTemp.isOver) {
-        if (newState.bestScores < newState.scores) {
-          newState.bestScores = newState.scores;
-        }
-      }
-      newState.mainList = [...tempList];
-      newState.overFlag = objTemp.isOver;
-      newState.scores += objTemp.scoresTemp;
-
-      if (newState.scores >= newState.bestScores) {
-        newState.bestScores = newState.scores;
-      }
-      return newState;
-    }
-    case 'CLOSEMASK': {
+    case ActionType.CLOSEMASK: {
       return {
         ...state,
         overFlag: false

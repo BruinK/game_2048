@@ -2,15 +2,38 @@ import React from 'react';
 import './Header.css';
 
 export default class Header extends React.Component {
-    state={
-      scoresHistory: 0,
-      bestScoresHistory: 0,
-      showScores: 0,
-      showBestScores: 0,
-      changeScoresFlag: false,
-      changeBSFlag: false
+  state = {
+    scoresHistory: 0,
+    bestScoresHistory: 0,
+    showScores: 0,
+    showBestScores: 0,
+    changeScoresFlag: false,
+    changeBSFlag: false
+  };
+  componentWillReceiveProps() {
+    const { logicData } = this.props;
+    if (logicData.scores > this.state.scoresHistory) {
+      this.setState({
+        scoresHistory: logicData.scores,
+        showScores: logicData.scores - this.state.scoresHistory,
+        changeScoresFlag: !this.state.changeScoresFlag
+      });
     }
-
+    if (logicData.bestScores > this.state.bestScoresHistory) {
+      this.setState({
+        bestScoresHistory: logicData.bestScores,
+        showBestScores: logicData.bestScores - this.state.bestScoresHistory,
+        changeBSFlag: !this.state.changeBSFlag
+      });
+    }
+    if (logicData.scores === 0) {
+      this.setState({
+        scoresHistory: 0,
+        showScores: 0,
+        showBestScores: 0
+      });
+    }
+  }
     handelReStart=() => {
       this.setState({
         scoresHistory: 0,
@@ -20,66 +43,56 @@ export default class Header extends React.Component {
       const { actions } = this.props;
       actions.startGame();
     }
-    handelScores=() => {
-      const { logicData } = this.props;
-      if (logicData.scores > this.state.scoresHistory) {
-        this.setState({
-          scoresHistory: logicData.scores,
-          showScores: logicData.scores - this.state.scoresHistory,
-          changeScoresFlag: !this.state.changeScoresFlag
-        });
+    showAdd= mark => {
+      if (mark === 1) {
+        if (this.state.showScores !== 0) {
+          return (
+            <div className={`scoresAnimation-${this.state.changeScoresFlag}`}>
+              +{this.state.showScores}
+            </div>);
+        }
       }
-      if (logicData.bestScores > this.state.bestScoresHistory) {
-        this.setState({
-          bestScoresHistory: logicData.bestScores,
-          showBestScores: logicData.bestScores - this.state.bestScoresHistory,
-          changeBSFlag: !this.state.changeBSFlag
-        });
-      }
-    }
-
-    displayAdd=() => {
-      if (this.state.showBestScores !== 0) {
-        return (
-          <div className={`scoresAnimation-${this.state.changeBSFlag}`}>
+      if (mark === 2) {
+        if (this.state.showBestScores !== 0) {
+          return (
+            <div className={`scoresAnimation-${this.state.changeBSFlag}`}>
               +{this.state.showBestScores}
-          </div>);
+            </div>);
+        }
       }
       return null;
     }
-    showAdd=() => {
-      if (this.state.showScores !== 0) {
-        return (
-          <div className={`scoresAnimation-${this.state.changeScoresFlag}`}>
-            +{this.state.showScores}
-          </div>);
+    showScores= id => {
+      const { logicData } = this.props;
+      if (id === 1) {
+        return <div > {logicData.scores}</div>;
+      }
+      if (id === 2) {
+        return <div>{logicData.bestScores}</div>;
       }
       return null;
     }
     render() {
-      const { logicData } = this.props;
       return (
         <div className="header">
           <div className="headerTop">
             <div className="title">2048</div>
             <div className="scores">
-              {
-                this.handelScores()
-              }
               <div>Scores</div>
-              <div > {
-                logicData.scores
-              }
-              </div>
               {
-                this.showAdd()
+                this.showScores(1)
+              }
+              {
+                this.showAdd(1)
               }
             </div>
             <div className="scores">
               <div>Record</div>
-              <div>{logicData.bestScores}</div>
               {
-                this.displayAdd()
+                this.showScores(2)
+              }
+              {
+                this.showAdd(2)
               }
             </div>
           </div>

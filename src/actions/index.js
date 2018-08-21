@@ -29,12 +29,6 @@ export function toRight() {
 
 // UI control
 
-export function hiddeScores() {
-  return {
-    type: 'HIDDESCORES'
-  };
-}
-
 export function closeMask() {
   return {
     type: 'CLOSEMASK'

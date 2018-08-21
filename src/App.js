@@ -16,10 +16,10 @@ class App extends Component {
     return null;
   }
   render() {
-    const { logicData, uiData, actions } = this.props;
+    const { logicData, actions } = this.props;
     return (
       <div className="App">
-        <Header actions={actions} logicData={logicData} uiData={uiData} />
+        <Header actions={actions} logicData={logicData} />
         <Body logicData={logicData} actions={actions} />
         {
           this.isGameOver()

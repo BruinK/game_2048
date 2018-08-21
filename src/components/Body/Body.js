@@ -90,7 +90,7 @@ export default class Body extends React.Component {
       return (
         <div className="gameBody" onTouchStart={this.onlistenTouchStart} onTouchEnd={this.onListenTouchEnd}>
           {
-                this.getCell()
+            this.getCell()
           }
         </div>
       );
