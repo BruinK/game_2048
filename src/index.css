@@ -2,8 +2,8 @@ body {
   margin: 0;
   padding: 0;
   background-color: #faf8ef;
-  background-image: url('./image/kk.jpg') ;
+  /* background-image: url('./image/kk.jpg') ;
   background-repeat: no-repeat;
-  background-size: 100% 120%;
+  background-size: 100% 120%; */
   font-family: sans-serif;
 }

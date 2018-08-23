@@ -2,6 +2,7 @@
   "name": "game_2048",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://BruinK.github.io/game_2048/",
   "dependencies": {
     "ajv": "^5.0.0",
     "react": "^16.4.2",
@@ -11,7 +12,8 @@
     "react-scripts": "1.1.4",
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "yarn": "^1.9.4"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
@@ -21,13 +23,16 @@
     "eslint-loader": "^1.7.1",
     "eslint-plugin-import": "^2.10.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.1.0"
+    "eslint-plugin-react": "^7.1.0",
+    "gh-pages": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "eslint": "eslint  --ext .js src/"
+    "eslint": "eslint  --ext .js src/",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   }
 }
